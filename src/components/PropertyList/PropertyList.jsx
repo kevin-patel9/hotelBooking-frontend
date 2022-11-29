@@ -12,7 +12,7 @@ export const PropertyList = () => {
     ]
 
     const { data, loading, error } = useFetch(
-        "https://hotels-booking.herokuapp.com/hotel/typeCount"
+        "https://hotels-booking.onrender.com/hotel/typeCount"
         );
 
     return (
