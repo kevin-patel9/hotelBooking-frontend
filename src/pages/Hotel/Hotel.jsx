@@ -20,7 +20,7 @@ export const Hotel = () => {
   const id = location.pathname.split("/")[2];
 
   const { data, loading, error, refetchData } = useFetch(
-    `https://hotels-booking.herokuapp.com/hotel/find/${id}`
+    `https://hotels-booking.onrender.com/hotel/find/${id}`
     
   );
 

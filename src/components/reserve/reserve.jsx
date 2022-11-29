@@ -10,7 +10,7 @@ import { useSelector } from "react-redux";
 const Reserve = ({ setOpen, hotelId }) => {
   const [selectedRooms, setSelectedRooms] = useState([]);
   const { data, loading, error } = useFetch(
-    `https://hotels-booking.herokuapp.com/hotel/room/${hotelId}`
+    `https://hotels-booking.onrender.com/hotel/room/${hotelId}`
   );
 
   const booking = useSelector((state) => state.booking);

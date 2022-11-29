@@ -24,7 +24,7 @@ export const List = () => {
   const maxValue = max || 9999;
 
   const { data, loading, error, refetchData } = useFetch(
-    `https://hotels-booking.herokuapp.com/hotel?city=${destination}&min=${minValue}&max=${maxValue}`
+    `https://hotels-booking.onrender.com/hotel?city=${destination}&min=${minValue}&max=${maxValue}`
   );
 
   const dispatch = useDispatch();
