@@ -52,6 +52,9 @@ export const Search = () => {
     navigate("/hotels", { state: { dates, option, destination } });
   };
 
+  console.log(destination);
+
+
   return (
     <div className="searchContainer">
       <h1>Over 156 hotels and homes across 20 cities</h1>

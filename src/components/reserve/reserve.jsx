@@ -68,6 +68,7 @@ const Reserve = ({ setOpen, hotelId }) => {
       navigate("/");
     } catch (err) {}
   };
+
   return (
     <div className="reserve">
       <div className="rContainer">
@@ -80,7 +81,7 @@ const Reserve = ({ setOpen, hotelId }) => {
         {data.map((item) => (
           <div className="rItem" key={item._id}>
             <div className="rItemInfo">
-              <div className="rTitle">{item.title}</div>
+              <div className="rTitle">{item?.title}</div>
               <div className="rDesc">{item.desc}</div>
               <div className="rMax">
                 Max people: <b>{item.maxPeople}</b>
