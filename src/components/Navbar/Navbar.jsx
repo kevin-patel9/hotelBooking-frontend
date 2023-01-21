@@ -17,7 +17,7 @@ export const Navbar = () => {
     <div className="navbar">
       <div className="navContainer">
         <Link to="/" style={{ color: "white", textDecoration: "none" }}>
-          <span className="logo">Lambda</span>
+          <span className="logo">Vacation Vault</span>
         </Link>
         {auth.user ? 
         (
@@ -26,7 +26,7 @@ export const Navbar = () => {
           <span>{}</span>
             <h4 style={{margin: "0", fontSize: "1.4rem", fontWeight: "normal" }}>{auth.user.username}</h4>
             <a href="https://lambda-booking.netlify.app" className="adminBtn">Admin Login</a>
-            <button onClick={handleLogout} className="btn" >Logout</button>
+            <button onClick={handleLogout} className="btn">Logout</button>
         </div>
         </>
         ) : (
