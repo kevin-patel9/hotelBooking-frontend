@@ -27,7 +27,6 @@ export const Register = () => {
       navigate("/login");
       
     } catch (err) {
-      console.log(err.response.data);
       setRegister(err.response.data);
     }
   };

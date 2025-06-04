@@ -13,6 +13,7 @@ import "react-date-range/dist/styles.css"; // main style file
 import "react-date-range/dist/theme/default.css"; // theme css file
 import { useDispatch } from "react-redux";
 import { newSearch } from "../../context/SearchContext";
+import { getNextDate } from "../../common/DateDetail";
 
 export const Search = () => {
   const dispatch = useDispatch();
@@ -25,7 +26,7 @@ export const Search = () => {
   const [dates, setDates] = useState([
     {
       startDate: new Date(),
-      endDate: new Date(),
+      endDate: getNextDate(),
       key: "selection",
     },
   ]);
@@ -38,7 +39,6 @@ export const Search = () => {
   });
 
   const handleCounter = (name, operation) => {
-    console.log(name);
     setOption((prev) => {
       return {
         ...prev,
@@ -47,13 +47,11 @@ export const Search = () => {
     });
   };
 
+  // get all hotel according to available price, city and date
   const handleSearch = () => {
     dispatch(newSearch({ dates, option, destination }));
     navigate("/hotels", { state: { dates, option, destination } });
   };
-
-  console.log(destination);
-
 
   return (
     <div className="searchContainer">

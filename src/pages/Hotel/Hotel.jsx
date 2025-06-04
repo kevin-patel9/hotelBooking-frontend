@@ -8,7 +8,7 @@ import {
   faCircleArrowRight,
 } from "@fortawesome/free-solid-svg-icons";
 import { Footer } from "../../components/Footer/Footer";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useFetch } from "../../hooks/useFetch";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -19,16 +19,17 @@ export const Hotel = () => {
 
   const id = location.pathname.split("/")[2];
 
-  const { data, loading, error, refetchData } = useFetch(
-    `https://hotels-booking.onrender.com/hotel/find/${id}`
-    
-  );
+  const { data, loading, refetchData } = useFetch();
+
+  useEffect(() => {
+    refetchData(`/hotel/find/${id}`);
+  },[])
 
   const [slideIndex, setSlideIndex] = useState(0);
   const [open, setOpen] = useState(false);
   const [modal, setModal] = useState(false);
 
-  const booking = useSelector((state) => state.booking);
+  const { booking } = useSelector((state) => state);
   const auth = useSelector((state) => state.auth);
 
   const navigate = useNavigate();
@@ -42,8 +43,8 @@ export const Hotel = () => {
   }
 
   const days = dayDiffer(
-    booking.dates[0]?.endDate,
-    booking.dates[0]?.startDate
+    booking?.dates[0]?.endDate || new Date(),
+    booking?.dates[0]?.startDate || new Date()
   );
 
   const handleSlideIndex = (index) => {
@@ -92,7 +93,7 @@ export const Hotel = () => {
               />
               <div className="sliderWrap">
                 <img
-                  src={data?.photo[slideIndex]}
+                  src={data?.photo[slideIndex]?.imgUrl}
                   alt="Hotel Room img"
                   className="sliderImg"
                 />
@@ -124,7 +125,7 @@ export const Hotel = () => {
                   <div key={i} className="hotelImgWrap">
                     <img
                       onClick={() => handleSlideIndex(i)}
-                      src={photo}
+                      src={photo?.imgUrl}
                       className="hotelImg"
                     />
                   </div>
@@ -142,10 +143,10 @@ export const Hotel = () => {
                   Enjoy the great experience at your selective {data?.type}.
                 </span>
                 <h2>
-                  <b>${days * data.price * booking.option.room}</b> ({days + 1}{" "}
+                  <b>${days * data?.price * booking?.options?.room}</b> ({days + 1}{" "}
                   Days & {days} Nights)
                   <br></br>
-                  <small>for {booking.option.room} rooms</small>
+                  <small>for {booking?.option?.room} rooms</small>
                 </h2>
                 <button onClick={handleClick}>Reserve or Book Now!</button>
               </div>

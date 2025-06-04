@@ -1,8 +1,8 @@
 import { Navbar } from "../../components/Navbar/Navbar";
 import "./List.css";
 import { useLocation } from "react-router-dom";
-import { useState } from "react";
-import { format, min } from "date-fns";
+import { useEffect, useState } from "react";
+import { format } from "date-fns";
 import { DateRange } from "react-date-range";
 import "react-date-range/dist/styles.css"; // main style file
 import "react-date-range/dist/theme/default.css"; // theme css file
@@ -17,22 +17,22 @@ export const List = () => {
   const [dates, setDates] = useState(location.state.dates);
   const [option, setOption] = useState(location.state.option);
   const [openDate, setOpenDate] = useState(false);
-  const [min, setMin] = useState(undefined);
-  const [max, setMax] = useState(undefined);
+  const [min, setMin] = useState(0);
+  const [max, setMax] = useState(9999);
 
-  const minValue = min || 0;
-  const maxValue = max || 9999;
+  const { data, loading, error, refetchData } = useFetch();
 
-  const { data, loading, error, refetchData } = useFetch(
-    `https://hotels-booking.onrender.com/hotel?city=${destination}&min=${minValue}&max=${maxValue}`
-  );
+  useEffect(() => {
+    const initialQuery = `/hotel/filterHotel?city=${destination}&min=${min}&max=${max}`;
+    refetchData(initialQuery);
+  }, []);
 
   const dispatch = useDispatch();
 
-  const handleClick = () => {
-    dispatch(newSearch({ dates, option, destination }));
-    refetchData();
-  };
+  const handleSearchHotelDetail = () => {
+    dispatch(newSearch({ dates, options: option, destination }));
+    refetchData(`/hotel/filterHotel?city=${destination}&min=${min}&max=${max}`);
+  };  
 
   return (
     <div>
@@ -73,6 +73,7 @@ export const List = () => {
                   Min price <small>(per night)</small>
                 </span>
                 <input
+                  value={min}
                   onChange={(e) => setMin(e.target.value)}
                   type="number"
                   className="listInput"
@@ -83,7 +84,8 @@ export const List = () => {
                   Max price <small>(per night)</small>
                 </span>
                 <input
-                  onChange={(e) => setMax(parseInt(e.target.value) + 1)}
+                  value={max}
+                  onChange={(e) => setMax(parseInt(e.target.value))}
                   type="number"
                   className="listInput"
                 />
@@ -94,6 +96,10 @@ export const List = () => {
                   type="number"
                   placeholder={option.adult}
                   className="listInput"
+                  onChange={(e) => {
+                    const value = parseInt(e.target.value, 10) || 0;
+                    setOption((prev) => ({ ...prev, adult: value }));
+                  }}
                 />
               </div>
               <div className="listOptionItem">
@@ -102,22 +108,28 @@ export const List = () => {
                   type="number"
                   placeholder={option.childern}
                   className="listInput"
+                  onChange={(e) => {
+                    const value = parseInt(e.target.value, 10) || 0;
+                    setOption((prev) => ({ ...prev, childern: value }));
+                  }}
                 />
               </div>
               <div className="listOptionItem">
                 <span className="listOptionText">Room</span>
                 <input
                   type="number"
+                  max={100}
+                  value={option?.room || ""}
                   onChange={(e) => {
-                    option.room = parseInt(e.target.value);
-                    setOption(option);
+                    const value = parseInt(e.target.value, 10) || 0;
+                    setOption((prev) => ({ ...prev, room: value }));
                   }}
-                  placeholder={option.room}
+                  placeholder="Enter room number"
                   className="listInput"
                 />
               </div>
             </div>
-            <button onClick={handleClick}>Search</button>
+            <button onClick={handleSearchHotelDetail}>Search</button>
           </div>
           <div className="listResult">
             {loading ? (
@@ -133,6 +145,9 @@ export const List = () => {
                 })}
               </>
             )}
+            {error &&
+              <span style={{ color: "red" }}>{error.response.data.message}</span>
+            }
           </div>
         </div>
       </div>

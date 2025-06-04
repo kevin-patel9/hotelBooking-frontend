@@ -12,6 +12,7 @@ export const Login = () => {
     email: undefined,
     password: undefined,
   });
+  const [error, setError] = useState("");
 
   const navigate = useNavigate();
 
@@ -22,12 +23,14 @@ export const Login = () => {
   }, [auth.user])
 
   const handleChange = (e) => {
-    setCredential(prev => ({...prev, [e.target.id]: e.target.value }))
+    setCredential(prev => ({...prev, [e.target.id]: e.target.value }));
+    setError("");
   }
 
   const handleClick = async (e) => {
     e.preventDefault()
     dispatch(loginStart())
+    setError("");
 
     try {
 
@@ -61,7 +64,7 @@ export const Login = () => {
         <Link to="/register" className="signUpLink" >
           <p>Sign Up</p>
         </Link>
-        {auth.error && <span>{auth.error}</span>}
+        {auth.error && <span style={{ color: "red" }}>{auth.error.message}</span>}
       </div>
     </div>
   );

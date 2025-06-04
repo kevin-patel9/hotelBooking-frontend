@@ -1,11 +1,14 @@
 import './Feature.css';
 import { useFetch } from '../../hooks/useFetch';
+import { useEffect } from 'react';
 
 export const Featured = () => {
 
-    const { data, loading, error } = useFetch(
-        "https://hotels-booking.onrender.com/hotel/cityCount?cities=mumbai,chennai,banglore"
-        );
+    const { data, loading, error, refetchData } = useFetch();
+
+    useEffect(() => {
+        refetchData("/hotel/cityCount?cities=mumbai,chennai,banglore")
+    },[])
 
     return (
         <div className="featured">

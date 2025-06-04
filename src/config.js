@@ -1,5 +1,5 @@
 import axios from "axios";
 
 export const axiosInstance = axios.create({
-    baseURL: "https://hotels-booking.onrender.com"
+    baseURL: process.env.REACT_APP_END_POINT
 })

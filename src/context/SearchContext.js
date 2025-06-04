@@ -1,12 +1,13 @@
 import { configureStore, createSlice, getDefaultMiddleware } from '@reduxjs/toolkit'
+import { getNextDate } from '../common/DateDetail';
 
 const initialState = {
     city: undefined,
-    dates: [],
+    dates: [{ startDate: new Date(), endDate: getNextDate() }],
     options: {
-        adult: undefined,
-        children: undefined,
-        room: undefined
+        adult: 1,
+        children: 0,
+        room: 1
     }
 }
 

@@ -1,5 +1,6 @@
 import './PropertyList.css'
 import { useFetch } from '../../hooks/useFetch'
+import { useEffect } from 'react';
 
 export const PropertyList = () => {
 
@@ -11,9 +12,11 @@ export const PropertyList = () => {
         'https://d360889yflu7he.cloudfront.net/rental_property/colina-villa-h/01_Facade__10_.jpeg'
     ]
 
-    const { data, loading, error } = useFetch(
-        "https://hotels-booking.onrender.com/hotel/typeCount"
-        );
+    const { data, loading, refetchData } = useFetch();
+
+    useEffect(() => {
+        refetchData("/hotel/typeCount");
+    },[])
 
     return (
         <div className='propList'>
@@ -22,10 +25,10 @@ export const PropertyList = () => {
                 {data && imgs.map((img, i)=> {
                     return (
                     <div key={i} className='propListItem'>
-                         <img 
+                        <img 
                             src= {img}
                             className='propListImg'
-                            />
+                        />
                         <div className="propListTitles">
                             <h1>{data[i]?.type}</h1>
                             <h3>{data[i]?.count} {data[i]?.type}</h3>

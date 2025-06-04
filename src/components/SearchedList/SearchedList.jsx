@@ -1,15 +1,20 @@
 import { Link } from "react-router-dom";
 import "./SearchedList.css";
+import { useSelector } from "react-redux";
 
 export const SearchedList = ({item}) => {
+
+  const { options, dates } = useSelector((state) => state.booking);
+
+  const totalDate = dates.map((data) => data?.endDate?.getDate() - data?.startDate?.getDate());
 
   return (
     <div className="serachList">
       {item ?
-     ( <div className="searchListItem">
+        (<div className="searchListItem">
         <div className="searchListImg">
           <img
-            src={item.photo[0] || "https://images.oyoroomscdn.com/uploads/hotel_image/114912/large/70d2401be9f23e26.jpg"}
+            src={item?.photo[0]?.imgUrl || "https://images.oyoroomscdn.com/uploads/hotel_image/114912/large/70d2401be9f23e26.jpg"}
             alt="img"
             className="listImg"
           />
@@ -35,9 +40,15 @@ export const SearchedList = ({item}) => {
             <button>{item.rating}</button>
           </div>}
           <div className="listText">
-            <span className="listPrice">${item.price}</span>
+            <span style={{ fontSize: 12 }}>Discounted Price:</span> 
+            <span className="listPrice">
+                ${((item.price * options?.room * totalDate) * 0.95).toFixed(2)}
+              <span style={{ textDecorationLine: "line-through", color: "red", marginLeft: 2, fontSize: 14 }}>
+                ${(item.price * options?.room * totalDate)}
+              </span>
+            </span>
             <span className="listTaxi">Includes Taxes Prices</span>
-            <Link to= {`/hotels/${item._id}`}>
+            <Link to= {`/hotels/${item.id}`}>
             <button className="listAvailButton">See avalibility</button>
             </Link>
           </div>
