@@ -32,7 +32,7 @@ export const Search = () => {
   ]);
 
   const [openOption, setOpenOption] = useState(false);
-  const [option, setOption] = useState({
+  const [options, setOption] = useState({
     adult: 1,
     childern: 0,
     room: 1,
@@ -42,15 +42,15 @@ export const Search = () => {
     setOption((prev) => {
       return {
         ...prev,
-        [name]: operation === "i" ? option[name] + 1 : option[name] - 1,
+        [name]: operation === "i" ? options[name] + 1 : options[name] - 1,
       };
     });
   };
 
   // get all hotel according to available price, city and date
   const handleSearch = () => {
-    dispatch(newSearch({ dates, option, destination }));
-    navigate("/hotels", { state: { dates, option, destination } });
+    dispatch(newSearch({ dates, options, destination }));
+    navigate("/hotels", { state: { dates, options, destination } });
   };
 
   return (
@@ -103,7 +103,7 @@ export const Search = () => {
                 setOpenOption(!openOption);
               }}
             >
-              {`${option.adult} adult , ${option.childern} children, ${option.room} room `}
+              {`${options.adult} adult , ${options.childern} children, ${options.room} room `}
             </span>
             {openOption && (
               <div className="room">
@@ -111,13 +111,13 @@ export const Search = () => {
                   <span className="optionText">Adult</span>
                   <div className="optionCounter">
                     <button
-                      disabled={option.adult <= 1}
+                      disabled={options.adult <= 1}
                       className="optionCounterBtn"
                       onClick={() => handleCounter("adult", "d")}
                     >
                       -
                     </button>
-                    <span className="optionCounterText">{option.adult}</span>
+                    <span className="optionCounterText">{options.adult}</span>
                     <button
                       className="optionCounterBtn"
                       onClick={() => handleCounter("adult", "i")}
@@ -130,13 +130,13 @@ export const Search = () => {
                   <span className="optionText">Children</span>
                   <div className="optionCounter">
                     <button
-                      disabled={option.childern <= 0}
+                      disabled={options.childern <= 0}
                       className="optionCounterBtn"
                       onClick={() => handleCounter("childern", "d")}
                     >
                       -
                     </button>
-                    <span className="optionCounterText">{option.childern}</span>
+                    <span className="optionCounterText">{options.childern}</span>
                     <button
                       className="optionCounterBtn"
                       onClick={() => handleCounter("childern", "i")}
@@ -149,13 +149,13 @@ export const Search = () => {
                   <span className="optionText">Room</span>
                   <div className="optionCounter">
                     <button
-                      disabled={option.room <= 1}
+                      disabled={options.room <= 1}
                       className="optionCounterBtn"
                       onClick={() => handleCounter("room", "d")}
                     >
                       -
                     </button>
-                    <span className="optionCounterText">{option.room}</span>
+                    <span className="optionCounterText">{options.room}</span>
                     <button
                       className="optionCounterBtn"
                       onClick={() => handleCounter("room", "i")}

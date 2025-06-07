@@ -15,7 +15,7 @@ export const List = () => {
   const location = useLocation();
   const [destination, setDestination] = useState(location.state.destination);
   const [dates, setDates] = useState(location.state.dates);
-  const [option, setOption] = useState(location.state.option);
+  const [options, setOptions] = useState(location.state.options);
   const [openDate, setOpenDate] = useState(false);
   const [min, setMin] = useState(0);
   const [max, setMax] = useState(9999);
@@ -30,7 +30,7 @@ export const List = () => {
   const dispatch = useDispatch();
 
   const handleSearchHotelDetail = () => {
-    dispatch(newSearch({ dates, options: option, destination }));
+    dispatch(newSearch({ dates, options, destination }));
     refetchData(`/hotel/filterHotel?city=${destination}&min=${min}&max=${max}`);
   };  
 
@@ -94,11 +94,11 @@ export const List = () => {
                 <span className="listOptionText">Adult</span>
                 <input
                   type="number"
-                  placeholder={option.adult}
+                  placeholder={options.adult}
                   className="listInput"
                   onChange={(e) => {
                     const value = parseInt(e.target.value, 10) || 0;
-                    setOption((prev) => ({ ...prev, adult: value }));
+                    setOptions((prev) => ({ ...prev, adult: value }));
                   }}
                 />
               </div>
@@ -106,11 +106,11 @@ export const List = () => {
                 <span className="listOptionText">Children</span>
                 <input
                   type="number"
-                  placeholder={option.childern}
+                  placeholder={options.childern}
                   className="listInput"
                   onChange={(e) => {
                     const value = parseInt(e.target.value, 10) || 0;
-                    setOption((prev) => ({ ...prev, childern: value }));
+                    setOptions((prev) => ({ ...prev, childern: value }));
                   }}
                 />
               </div>
@@ -119,10 +119,10 @@ export const List = () => {
                 <input
                   type="number"
                   max={100}
-                  value={option?.room || ""}
+                  value={options?.room || ""}
                   onChange={(e) => {
                     const value = parseInt(e.target.value, 10) || 0;
-                    setOption((prev) => ({ ...prev, room: value }));
+                    setOptions((prev) => ({ ...prev, room: value }));
                   }}
                   placeholder="Enter room number"
                   className="listInput"

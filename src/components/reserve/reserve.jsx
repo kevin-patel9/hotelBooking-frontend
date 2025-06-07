@@ -16,6 +16,7 @@ const Reserve = ({ setOpen, hotelId }) => {
   },[]);
 
   const [roomData, setRoomData] = useState([]);
+  const [currentRoomId, setCurrentRoomId] = useState("");
 
   useEffect(() => {
     const updatedData = data.map((val) => {
@@ -30,7 +31,7 @@ const Reserve = ({ setOpen, hotelId }) => {
           updatedRoomNumbers.push({
             id: room.id,
             number: room.number,
-            bookedRooms: [room.bookedDate],
+            bookedRooms: room.bookedDates,
           });
         }
       });
@@ -45,18 +46,21 @@ const Reserve = ({ setOpen, hotelId }) => {
   const booking = useSelector((state) => state.booking);
 
   const getRangeDates = (startDate, endDate) => {
-    const start = new Date (startDate.getTime());
+    const start = new Date(startDate.getTime());
     const end = new Date(endDate.getTime());
-    
-    const date = [];
-    
+  
+    const dates = [];
+  
     while (start <= end) {
-      date.push(new Date(start).getTime());
+      // Convert to YYYY-MM-DD format
+      const formattedDate = new Date(start).toISOString().split('T')[0];
+      dates.push(formattedDate);
+  
       start.setDate(start.getDate() + 1);
     }
-    
-    return date;
-  };
+  
+    return dates;
+  };  
 
   const alldates = getRangeDates(
     booking?.dates[0]?.startDate || new Date(),
@@ -64,16 +68,17 @@ const Reserve = ({ setOpen, hotelId }) => {
   );
 
   const isAvailable = (roomNumber) => {
-    const isFound = roomNumber?.bookedDate?.some((date) =>
-      alldates.includes(new Date(date).getTime())
+    const isFound = roomNumber?.bookedRooms?.some((date) =>
+      alldates.includes(date)
     );
 
     return !isFound;
   };
 
-  const handleSelect = (e) => {
+  const handleSelect = (e, roomId) => {
     const checked = e.target.checked;
     const value = e.target.value;
+    setCurrentRoomId(roomId);
     setSelectedRooms(
       checked
         ? [...selectedRooms, value]
@@ -84,18 +89,18 @@ const Reserve = ({ setOpen, hotelId }) => {
   const navigate = useNavigate();
 
   const handleClick = async () => {
-    try {
-      await Promise.all(
-        selectedRooms.map((roomId) => {
-          const res = axiosInstance.put(`/room/availability/${roomId}`, {
-            dates: alldates,
-          });
-          return res.data;
-        })
-      );
-      setOpen(false);
-      navigate("/");
-    } catch (err) {}
+      const res = await axiosInstance.post(`/room/availability`, {
+        roomId: currentRoomId,
+        roomNumber: selectedRooms,
+        startDate: booking?.dates[0]?.startDate,
+        endDate: booking?.dates[0]?.endDate
+      });
+
+      setOpen(false)
+
+      if (res.data.message){
+        navigate("/")
+      }
   };
 
   return (
@@ -108,7 +113,7 @@ const Reserve = ({ setOpen, hotelId }) => {
         />
         <span>Select your rooms:</span>
         {roomData?.map((item) => (
-          <div className="rItem" key={item._id}>
+          <div className="rItem" key={item.id}>
             <div className="rItemInfo">
               <div className="rTitle">{item?.title}</div>
               <div className="rDesc">{item?.desc}</div>
@@ -118,15 +123,15 @@ const Reserve = ({ setOpen, hotelId }) => {
               <div className="rPrice"><b>${item.price}</b></div>
             </div>
             <div className="rSelectRooms">
-              { item?.roomNumbers?.map( (roomNumber, i) => {
+              { item?.roomNumbers?.map((roomNumber, i) => {
                 return (
                 <div key={i}>
                     <div className="rooms">
-                        <label>{roomNumber?.number}</label>
+                        <label>{roomNumber.number}</label>
                         <input
                             type="checkbox"
-                            value={roomNumber.id}
-                            onChange={handleSelect}
+                            value={roomNumber.number}
+                            onChange={(e) => handleSelect(e, item.id)}
                             disabled={!isAvailable(roomNumber)}
                         />
                     </div>
